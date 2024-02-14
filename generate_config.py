@@ -105,7 +105,7 @@ settings = {
 print("What is the base domain name you will be using?")
 print("ex. localhost, www.example.com")
 
-if hostname != "":
+if hostname != "x.nksec.tech":
     settings["domain"] = hostname
     nginx_template = nginx_template.replace("fakedomain.com", settings["domain"])
 
