@@ -19,7 +19,7 @@ RUN service postgresql start && \
 USER root
 
 # Clone xsshunter repository
-RUN git clone https://github.com/mandatoryprogrammer/xsshunter && \
+RUN git clone https://github.com/nandakrr/xsshunter.git && \
     cd xsshunter && \
     python3 generate_config.py && \
     mv default /etc/nginx/sites-enabled/default && \
