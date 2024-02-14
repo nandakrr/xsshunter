@@ -92,56 +92,19 @@ server {
 }
 """
 
+
 settings = {
-    "email_from": "",
-    "mailgun_api_key": "",
-    "mailgun_sending_domain": "",
-    "domain": "",
-    "abuse_email": "",
+    "email_from": "you@example.com",
+    "mailgun_api_key": "your_mailgun_api_key",
+    "mailgun_sending_domain": "your_mailgun_sending_domain",
+    "domain": "x.nksec.tech",
+    "abuse_email": "abuse@example.com",
     "cookie_secret": "",
+    "postgreql_username": "your_postgres_user",
+    "postgreql_password": "your_postgres_password",
+    "postgres_db": "your_postgres_db",
 }
 
-
-print("What is the base domain name you will be using?")
-print("ex. localhost, www.example.com")
-
-hostname = "x.nksec.tech"
-if hostname != "x.nksec.tech":
-    settings["domain"] = hostname
-    nginx_template = nginx_template.replace("fakedomain.com", settings["domain"])
-
-print("Great! Now let's set up your Mailgun account to send XSS alerts.")
-print("")
-print("Enter your API key:")
-print("ex. key-8da843ff65205a61374b09b81ed0fa35")
-settings["mailgun_api_key"] = input("Mailgun API key: ")
-print("")
-print("What is your Mailgun domain?")
-print("ex. example.com")
-settings["mailgun_sending_domain"] = input("Mailgun domain: ")
-print("")
-print("What email address is sending the payload fire emails?")
-print("ex. no-reply@example.com")
-settings["email_from"] = input("Sending email address: ")
-print("")
-print("Where should abuse/contact emails go?")
-print("ex. yourpersonal@gmail.com")
-settings["abuse_email"] = input("Abuse/Contact email: ")
-print("")
-print("")
-print("What Postgres user is this service using?")
-print("ex. xsshunter")
-settings["postgreql_username"] = input("Postgres username: ")
-print("")
-print("What is the Postgres user's password?")
-print("ex. @!$%@^%UOFGJOEJG$")
-settings["postgreql_password"] = input("Postgres password: ")
-print("")
-print("What is the Postgres user's DB?")
-print("ex. xsshunter")
-settings["postgres_db"] = input("Postgres DB: ")
-print("")
-print("Generating cookie secret...")
 settings["cookie_secret"] = binascii.hexlify(os.urandom(50))
 
 yaml_config = yaml.dump(settings, default_flow_style=False)
@@ -149,20 +112,6 @@ file_handler = open("config.yaml", "w")
 file_handler.write(yaml_config)
 file_handler.close()
 
-print("Minting new nginx configuration file...")
 file_handler = open("default", "w")
 file_handler.write(nginx_template)
 file_handler.close()
-
-print("""
-Setup complete! Please now copy the 'default' file to /etc/nginx/sites-enabled/default
-This can be done by running the following:
-sudo cp default /etc/nginx/sites-enabled/default
-
-Also, please ensure your wildcard SSL certificate and key are available at the following locations:
-/etc/nginx/ssl/""" + hostname + """.crt; # Wildcard SSL certificate
-/etc/nginx/ssl/""" + hostname + """.key; # Wildcard SSL key
-
-Good luck hunting for XSS!
-                            -mandatory
-""")
