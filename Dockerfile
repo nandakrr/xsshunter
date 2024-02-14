@@ -22,7 +22,7 @@ USER root
 # Clone xsshunter repository
 RUN git clone https://github.com/nandakrr/xsshunter && \
     cd xsshunter && \
-    ./generate_config.py && \
+    python3 generate_config.py && \
     mv default /etc/nginx/sites-enabled/default && \
     service nginx restart
 
