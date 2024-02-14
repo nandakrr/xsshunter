@@ -6,7 +6,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Install dependencies
 RUN apt-get update && \
-    apt-get install -y nginx postgresql postgresql-contrib git tmux python3-venv python3-dev libpq-dev libffi-dev
+    apt-get install -y nginx postgresql postgresql-contrib git tmux python3-venv python3-dev libpq-dev libffi-dev && \
+    apt-get install -y python3-yaml  # Install PyYAML
 
 # Set up PostgreSQL
 USER postgres
@@ -19,9 +20,9 @@ RUN service postgresql start && \
 USER root
 
 # Clone xsshunter repository
-RUN git clone https://github.com/nandakrr/xsshunter.git && \
+RUN git clone https://github.com/nandakrr/xsshunter && \
     cd xsshunter && \
-    python3 generate_config.py && \
+    ./generate_config.py && \
     mv default /etc/nginx/sites-enabled/default && \
     service nginx restart
 
@@ -42,5 +43,5 @@ EXPOSE 80
 EXPOSE 5000
 
 # Start the services
-CMD ["tmux", "new-session", "-d", "bash", "-c", "cd /xsshunter/api && . env/bin/activate && python3 apiserver.py; bash"] && \
-    ["tmux", "new-session", "-d", "bash", "-c", "cd /xsshunter/gui && . env/bin/activate && python3 guiserver.py; bash"]
+CMD ["tmux", "new-session", "-d", "bash", "-c", "cd /xsshunter/api && . env/bin/activate && ./apiserver.py; bash"] && \
+    ["tmux", "new-session", "-d", "bash", "-c", "cd /xsshunter/gui && . env/bin/activate && ./guiserver.py; bash"]
